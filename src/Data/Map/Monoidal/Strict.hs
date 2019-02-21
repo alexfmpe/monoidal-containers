@@ -418,8 +418,8 @@ mapAccumRWithKey :: forall k a b c. (a -> k -> b -> (a, c)) -> a -> MonoidalMap 
 mapAccumRWithKey = coerce (M.mapAccumRWithKey :: (a -> k -> b -> (a, c)) -> a -> M.Map k b -> (a, M.Map k c))
 {-# INLINE mapAccumRWithKey #-}
 
-mapKeys :: forall k1 k2 a. Ord k2 => (k1 -> k2) -> MonoidalMap k1 a -> MonoidalMap k2 a
-mapKeys = coerce (M.mapKeys :: (k1 -> k2) -> M.Map k1 a -> M.Map k2 a)
+mapKeys :: forall k1 k2 a. (Ord k2, Semigroup a) => (k1 -> k2) -> MonoidalMap k1 a -> MonoidalMap k2 a
+mapKeys = mapKeysWith (<>)
 {-# INLINE mapKeys #-}
 
 mapKeysWith :: forall k1 k2 a. Ord k2 => (a -> a -> a) -> (k1 -> k2) -> MonoidalMap k1 a -> MonoidalMap k2 a
@@ -665,5 +665,3 @@ maxViewWithKey = coerce (M.maxViewWithKey :: M.Map k a -> Maybe ((k, a), M.Map k
 valid :: forall k a. Ord k => MonoidalMap k a -> Bool
 valid = coerce (M.valid :: Ord k => M.Map k a -> Bool)
 {-# INLINE valid #-}
-
-
